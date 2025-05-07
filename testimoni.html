@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Galeri Testimoni</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f0f0f0;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      margin-bottom: 20px;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+    .item {
+      flex: 0 0 calc(50% - 20px); /* 2 item per baris */
+      background: white;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 0 6px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+    }
+    .item img {
+      width: 100%;
+      border-radius: 8px;
+    }
+    .item p {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
+    }
+
+    @media (max-width: 600px) {
+      .item {
+        flex: 0 0 100%; /* di HP jadi 1 kolom */
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Testimoni Brexxy Official</h1>
+  <div class="gallery">
+    <div class="item">
+      <img src="https://files.catbox.moe/imf3mw.jpg" alt="Testimoni 1">
+      <p>Produk A: Serum Wajah Glowing</p>
+    </div>
+    <div class="item">
+      <img src="https://files.catbox.moe/oe0eup.jpg" alt="Testimoni 2">
+      <p>Produk B: Sabun Herbal Alami</p>
+    </div>
+    <div class="item">
+      <img src="https://files.catbox.moe/hnvjx2.jpg" alt="Testimoni 3">
+      <p>Produk C: Krim Pemutih Aman BPOM</p>
+    </div>
+    <div class="item">
+      <img src="https://files.catbox.moe/bbn7y4.jpg" alt="Testimoni 4">
+      <p>Produk D: Masker Lumpur Detoks</p>
+    </div>
+    <div class="item">
+      <img src="https://files.catbox.moe/syxgle.jpg" alt="Testimoni 5">
+      <p>Produk E: Paket Perawatan Lengkap</p>
+    </div>
+    <div class="item">
+      <img src="https://files.catbox.moe/0ezqmz.jpg" alt="Testimoni 6">
+      <p>Produk F: Toner Penyegar Kulit</p>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Toko Elegan</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f9fafc;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #1e88e5;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .cart-btn {
+      background-color: white;
+      color: #1e88e5;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .cart-btn:hover {
+      background-color: #e3f2fd;
+    }
+
+    .toolbar {
+      padding: 1rem 2rem;
+      background: #eef3f8;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .toolbar button {
+      padding: 0.5rem 1rem;
+      background-color: #1e88e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .toolbar button:hover {
+      background-color: #1565c0;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      padding: 2rem;
+    }
+
+    .product {
+      background-color: white;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .product:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+    }
+
+    .product img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 10px;
+    }
+
+    .product h3 {
+      margin: 0.8rem 0 0.4rem;
+      font-size: 1.1rem;
+    }
+
+    .price-original {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 0.9rem;
+    }
+
+    .price-discount {
+      color: #e53935;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .product button {
+      background-color: #1e88e5;
+      color: white;
+      padding: 0.6rem 1.2rem;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 0.8rem;
+      transition: background 0.3s ease;
+    }
+
+    .product button:hover {
+      background-color: #1565c0;
+    }
+
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 400px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 1rem;
+      color: #1e88e5;
+    }
+
+    .close {
+      float: right;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: #999;
+    }
+
+    #cart-items li {
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    #cart-total {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: #1e88e5;
+    }
+
+    #checkout-btn {
+      margin-top: 1rem;
+      background: #43a047;
+      width: 100%;
+    }
+
+    #checkout-btn:hover {
+      background: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Toko Elegan</h1>
+    <button class="cart-btn" onclick="openCart()">Keranjang (<span id="cart-count">0</span>)</button>
+  </header>
+
+  <div class="toolbar">
+    <button onclick="toggleDiscountFilter()">Tampilkan Diskon Saja</button>
+  </div>
+
+  <section class="products" id="product-list"></section>
+
+  <div class="modal" id="cart-modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeCart()">&times;</span>
+      <h2>Keranjang Belanja</h2>
+      <ul id="cart-items"></ul>
+      <div id="cart-total"></div>
+      <button id="checkout-btn" onclick="checkout()">Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const products = [
+        { id: 1, name: 'Produk A', price: 75000, discount: 0.2, img: 'https://via.placeholder.com/300x180?text=Produk+A' },
+        { id: 2, name: 'Produk B', price: 99000, discount: 0.15, img: 'https://via.placeholder.com/300x180?text=Produk+B' },
+        { id: 3, name: 'Produk C', price: 125000, discount: 0.25, img: 'https://via.placeholder.com/300x180?text=Produk+C' },
+        { id: 4, name: 'Produk D', price: 65000, discount: 0, img: 'https://via.placeholder.com/300x180?text=Produk+D' }
+      ];
+
+      let filterDiscountOnly = false;
+      const cart = [];
+
+      function displayProducts() {
+        const container = document.getElementById('product-list');
+        container.innerHTML = '';
+        products
+          .filter(p => !filterDiscountOnly || p.discount > 0)
+          .forEach(product => {
+            const discountPrice = product.price - product.price * product.discount;
+            const el = document.createElement('div');
+            el.className = 'product';
+            el.innerHTML = `
+              <img src="${product.img}" alt="${product.name}" />
+              <h3>${product.name}</h3>
+              <p>
+                ${product.discount > 0
+                  ? `<span class="price-original">Rp ${product.price.toLocaleString()}</span><br>
+                     <span class="price-discount">Rp ${discountPrice.toLocaleString()}</span>`
+                  : `<span class="price-discount">Rp ${product.price.toLocaleString()}</span>`}
+              </p>
+              <button onclick="addToCart(${product.id})">Tambah ke Keranjang</button>
+            `;
+            container.appendChild(el);
+          });
+      }
+
+      function toggleDiscountFilter() {
+        filterDiscountOnly = !filterDiscountOnly;
+        displayProducts();
+      }
+
+      function addToCart(id) {
+        const product = products.find(p => p.id === id);
+        cart.push(product);
+        updateCartCount();
+      }
+
+      function updateCartCount() {
+        document.getElementById('cart-count').textContent = cart.length;
+      }
+
+      function openCart() {
+        const modal = document.getElementById('cart-modal');
+        const list = document.getElementById('cart-items');
+        const totalDisplay = document.getElementById('cart-total');
+        list.innerHTML = '';
+        let total = 0;
+        cart.forEach(item => {
+          const price = item.price - item.price * item.discount;
+          total += price;
+          const li = document.createElement('li');
+          li.textContent = `${item.name} - Rp ${price.toLocaleString()}`;
+          list.appendChild(li);
+        });
+        totalDisplay.textContent = `Total: Rp ${total.toLocaleString()}`;
+        modal.style.display = 'flex';
+      }
+
+      function closeCart() {
+        document.getElementById('cart-modal').style.display = 'none';
+      }
+
+      function checkout() {
+        alert("Pesanan Anda berhasil dikirim!");
+        cart.length = 0;
+        updateCartCount();
+        closeCart();
+      }
+
+      window.onclick = function(event) {
+        const modal = document.getElementById('cart-modal');
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
+
+      displayProducts();
+    });
+  </script>
+</body>
+</html>
